@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="app.fevermeter.org.Activity.AddFeverActivity">
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fafafa"
+                android:gravity="center_vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/temperatureLabel"
+                    android:text="@string/temperature"
+                    android:layout_marginTop="@dimen/form_margin_top"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/temperature"
+                    android:layout_below="@+id/temperatureLabel"
+                    android:layout_marginTop="@dimen/form_margin_top"
+                    android:inputType="number"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/feverDate"
+                    android:layout_below="@+id/temperature"
+                    android:layout_marginTop="@dimen/form_margin_top"
+                    android:text="@string/feverDate"/>
+
+
+            <Spinner
+                    android:layout_width="50pt"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/yearList"
+                    android:entries="@array/year_list"
+                    android:layout_marginTop="@dimen/form_margin_top"
+                    android:layout_below="@+id/feverDate">
+            </Spinner>
+
+            <Spinner
+                    android:layout_width="50pt"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/monthList"
+                    android:entries="@array/month_list"
+                    android:layout_alignTop="@+id/yearList"
+                    android:layout_alignBottom="@+id/yearList"
+                    android:layout_toEndOf="@+id/yearList">
+            </Spinner>
+
+            <Spinner
+                    android:layout_width="50pt"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dayList"
+                    android:entries="@array/day_list"
+                    android:layout_alignTop="@+id/monthList"
+                    android:layout_alignBottom="@+id/monthList"
+                    android:layout_toEndOf="@+id/monthList">
+
+            </Spinner>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/feverTimeLabel"
+                    android:layout_below="@+id/yearList"
+                    android:layout_marginTop="@dimen/form_margin_top"
+                    android:text="@string/feverTime"/>
+
+            <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/timeList"
+                    android:layout_below="@+id/feverTimeLabel"
+                    android:layout_marginTop="@dimen/form_margin_top"
+                    android:entries="@array/time_list">
+            </Spinner>
+
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addFeverButton"
+                    android:layout_below="@+id/timeList"
+                    android:layout_marginTop="@dimen/form_margin_top"
+                    android:text="@string/save"
+                    android:onClick="addFever"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
