@@ -76,6 +76,18 @@ public class FeverReportActivity extends AppCompatActivity {
         }
     }
 
+    public void toggleListAndGraph(View view){
+        ListView fever_report_list = (ListView) findViewById(R.id.fever_report_list);
+        LineChart fever_report_graph = (LineChart) findViewById(R.id.fever_report_graph);
+        if(fever_report_list.getVisibility() == View.GONE){
+            fever_report_list.setVisibility(View.VISIBLE);
+            fever_report_graph.setVisibility(View.GONE);
+        }else{
+            fever_report_graph.setVisibility(View.VISIBLE);
+            fever_report_list.setVisibility(View.GONE);
+        }
+    }
+
 
     private class FeverListFiller extends AsyncTask<String,String,List<Fever>> {
 
