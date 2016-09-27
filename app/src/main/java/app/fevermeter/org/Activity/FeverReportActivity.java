@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import app.fevermeter.org.Adapter.FeverAdapter;
 import app.fevermeter.org.Database.DatabaseHandler;
 import app.fevermeter.org.Helper.HelperService;
@@ -26,9 +28,7 @@ import org.fevermeter.app.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 import static android.R.attr.entries;
 
@@ -76,16 +76,18 @@ public class FeverReportActivity extends AppCompatActivity {
         }
     }
 
-    public void toggleListAndGraph(View view){
+    public void feverListView(View view){
         ListView fever_report_list = (ListView) findViewById(R.id.fever_report_list);
         LineChart fever_report_graph = (LineChart) findViewById(R.id.fever_report_graph);
-        if(fever_report_list.getVisibility() == View.GONE){
-            fever_report_list.setVisibility(View.VISIBLE);
-            fever_report_graph.setVisibility(View.GONE);
-        }else{
-            fever_report_graph.setVisibility(View.VISIBLE);
-            fever_report_list.setVisibility(View.GONE);
-        }
+        fever_report_list.setVisibility(View.VISIBLE);
+        fever_report_graph.setVisibility(View.GONE);
+    }
+
+    public void feverGraphView(View view){
+        ListView fever_report_list = (ListView) findViewById(R.id.fever_report_list);
+        LineChart fever_report_graph = (LineChart) findViewById(R.id.fever_report_graph);
+        fever_report_graph.setVisibility(View.VISIBLE);
+        fever_report_list.setVisibility(View.GONE);
     }
 
 
@@ -135,16 +137,15 @@ public class FeverReportActivity extends AppCompatActivity {
                     YAxis yAxisLeft = lineChart.getAxisLeft();
                     yAxisLeft.setStartAtZero(false);
 
-                    // creating list of entry<br />
                     ArrayList<Entry> entries = new ArrayList<>();
                     ArrayList<String> labels = new ArrayList<>();
                     int index = 0;
-                    Calendar calendar = Calendar.getInstance();
 
                     for(Fever f:fevers){
-                        entries.add(new Entry(Float.parseFloat(String.valueOf(f.getTemperature())),index++));
-                        calendar.setTimeInMillis(f.getFeverTime());
-                        labels.add(HelperService.getFeverDate(f.getFeverDate())+"\n"+f.getFeverTime());
+                        if(index<10) {
+                            entries.add(new Entry(Float.parseFloat(String.valueOf(f.getTemperature())), index++));
+                            labels.add(HelperService.getFormatterFeverDate(f.getFeverDate()));
+                        }
                     }
 
                     LineDataSet dataSet = new LineDataSet(entries, "Temperature");
@@ -160,9 +161,63 @@ public class FeverReportActivity extends AppCompatActivity {
 
                     lineChart.setDescription("Fever Meter");
                     lineChart.invalidate();
+
+
+                    //Setting Filter Parameters
+
+                    List<String> year_list = setYearSpinner();
+                    List<String> month_list = new ArrayList<>();
+                    month_list.add("Month");
+                    List<String> day_list = new ArrayList<>();
+                    day_list.add("Day");
+                    List<String> time_list = new ArrayList<>();
+                    time_list.add("Time");
+                    for(int i=1;i<=12;i++){month_list.add(i+"");time_list.add(i+" AM");}
+                    for(int i=1;i<=30;i++){day_list.add(i+"");}
+                    for(int i=1;i<=12;i++){time_list.add(i+" PM");}
+
+                    long startDateInMillis = fevers.get(fevers.size()-1).getFeverDate();
+                    long endDateInMillis = fevers.get(0).getFeverDate();
+
+                    Spinner start_year = (Spinner) findViewById(R.id.startYear);
+                    Spinner end_year = (Spinner) findViewById(R.id.endYear);
+                    start_year.setSelection(year_list.indexOf(HelperService.getYearFromDate(startDateInMillis)+""));
+                    end_year.setSelection(year_list.indexOf(HelperService.getYearFromDate(endDateInMillis)+""));
+
+
+                    Spinner startMonth = (Spinner) findViewById(R.id.startMonth);
+                    Spinner endMonth = (Spinner) findViewById(R.id.endMonth);
+                    startMonth.setSelection(month_list.indexOf(HelperService.getMonthFromDate(startDateInMillis)+""));
+                    endMonth.setSelection(month_list.indexOf(HelperService.getMonthFromDate(endDateInMillis)+""));
+
+
+                    Spinner startDay = (Spinner) findViewById(R.id.startDay);
+                    Spinner endDay = (Spinner) findViewById(R.id.endDay);
+                    startDay.setSelection(day_list.indexOf(HelperService.getDayFromDate(startDateInMillis)+""));
+                    endDay.setSelection(day_list.indexOf(HelperService.getDayFromDate(endDateInMillis)+""));
+
+                    Spinner startTime = (Spinner) findViewById(R.id.startTime);
+                    Spinner endTime = (Spinner) findViewById(R.id.endTime);
+                    startTime.setSelection(time_list.indexOf(HelperService.getTimeFromDate(startDateInMillis)+""));
+                    endTime.setSelection(time_list.indexOf(HelperService.getTimeFromDate(endDateInMillis)+""));
+
                 }
             });
         }
+
+        private List<String> setYearSpinner(){
+            List<String> year_list = HelperService.getDynamicYearList();
+
+            ArrayAdapter<String> year_adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item,year_list);
+
+            Spinner start_year = (Spinner) findViewById(R.id.startYear);
+            start_year.setAdapter(year_adapter);
+            Spinner end_year = (Spinner) findViewById(R.id.endYear);
+            end_year.setAdapter(year_adapter);
+            Collections.reverse(year_list);
+            return year_list;
+        }
+
     }
 
 }

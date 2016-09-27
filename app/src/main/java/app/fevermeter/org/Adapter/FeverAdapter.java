@@ -33,10 +33,7 @@ public class FeverAdapter extends ArrayAdapter<Fever>{
 
         Fever fever = getItem(position);
 
-        String feverDate = HelperService.getFeverDate(fever.getFeverDate());
-
-        int time = fever.getFeverTime();
-        feverDate+=" "+HelperService.getFormattedTime(time);
+        String feverDate = HelperService.getFormatterFeverDate(fever.getFeverDate());
 
         feverDateText.setText(feverDate);
         temperatureText.setText(fever.getTemperature()+" F");

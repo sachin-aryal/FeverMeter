@@ -15,7 +15,7 @@
             android:layout_height="match_parent">
         <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
             <ScrollView
                     android:layout_width="wrap_content"
@@ -37,7 +37,6 @@
                             android:layout_width="38pt"
                             android:layout_height="wrap_content"
                             android:id="@+id/startYear"
-                            android:entries="@array/year_list"
                             android:layout_marginTop="@dimen/form_margin_top"
                             android:layout_below="@+id/startDateLabel">
                     </Spinner>
@@ -86,7 +85,6 @@
                             android:layout_width="38pt"
                             android:layout_height="wrap_content"
                             android:id="@+id/endYear"
-                            android:entries="@array/year_list"
                             android:layout_marginTop="@dimen/form_margin_top"
                             android:layout_below="@+id/endDateLabel">
                     </Spinner>
@@ -138,33 +136,32 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/fever_report_scroll"
                     android:id="@+id/toggle_bar"
-                    android:layout_marginTop="@dimen/form_margin_top">
+                    android:layout_marginTop="@dimen/form_margin_top"
+                    android:layout_marginLeft="9pt">
                 <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fever List"
                         android:layout_marginLeft="7pt"
-                        android:onClick="toggleListAndGraph"/>
+                        android:onClick="feverListView"/>
                 <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Graph"
-                        android:layout_marginLeft="10pt"
-                        android:onClick="toggleListAndGraph"/>
+                        android:onClick="feverGraphView"/>
 
                 <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/filter_toggler"
                         android:text="Filter Bar"
-                        android:onClick="toggleFilterBar"
-                        android:layout_marginLeft="10pt"/>
+                        android:onClick="toggleFilterBar"/>
 
             </TabWidget>
 
             <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="200pt"
+                    android:layout_height="200pt"
                     android:divider="#b5b5b5"
                     android:dividerHeight="0.5dp"
                     android:id="@+id/fever_report_list"

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import app.fevermeter.org.Database.DatabaseHandler;
@@ -16,6 +17,7 @@ import app.fevermeter.org.Model.Fever;
 import org.fevermeter.app.R;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class AddFeverActivity extends AppCompatActivity {
 
@@ -23,6 +25,7 @@ public class AddFeverActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fever);
+        setYearSpinner();
     }
 
 
@@ -36,15 +39,15 @@ public class AddFeverActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addFever:
-                Intent fever = new Intent(this,AddFeverActivity.class);
+                Intent fever = new Intent(this, AddFeverActivity.class);
                 startActivity(fever);
                 return true;
             case R.id.feverReport:
-                Intent feverReport = new Intent(this,FeverReportActivity.class);
+                Intent feverReport = new Intent(this, FeverReportActivity.class);
                 startActivity(feverReport);
                 return true;
             case R.id.home:
-                Intent home = new Intent(this,HomeActivity.class);
+                Intent home = new Intent(this, HomeActivity.class);
                 startActivity(home);
                 return true;
             default:
@@ -67,13 +70,24 @@ public class AddFeverActivity extends AppCompatActivity {
         int month = Integer.parseInt(monthSpinner.getSelectedItem().toString());
         int day = Integer.parseInt(daySpinner.getSelectedItem().toString());
         String timeText = timeSpinner.getSelectedItem().toString();
-        int time=HelperService.getActualTime(timeText);
+        int time = HelperService.getActualTime(timeText);
 
-        String feverDate = year+"/"+month+"/"+day;
+        System.out.println("Adding Time:"+time);
 
-        Fever fever = new Fever(temperature, HelperService.getTimeInMillis(feverDate),time);
+        String feverDate = year + "/" + month + "/" + day + " " + time + ":00:00";
+
+        Fever fever = new Fever(temperature, HelperService.getTimeInMillis(feverDate));
 
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
         databaseHandler.addFever(fever);
+    }
+
+    private void setYearSpinner() {
+        List<String> year_list = HelperService.getDynamicYearList();
+
+        ArrayAdapter<String> year_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, year_list);
+
+        Spinner year_spinner = (Spinner) findViewById(R.id.yearList);
+        year_spinner.setAdapter(year_adapter);
     }
 }

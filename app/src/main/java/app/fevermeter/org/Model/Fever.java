@@ -9,12 +9,10 @@ public class Fever {
 
     private double temperature;
     private long feverDate;
-    private int feverTime;
 
-    public Fever(double temperature, long feverDate,int feverTime) {
+    public Fever(double temperature, long feverDate) {
         this.temperature = temperature;
         this.feverDate = feverDate;
-        this.feverTime = feverTime;
     }
 
     public long getFeverDate() {
@@ -32,14 +30,6 @@ public class Fever {
 
     public void setTemperature(double temperature) {
         this.temperature = temperature;
-    }
-
-    public int getFeverTime() {
-        return feverTime;
-    }
-
-    public void setFeverTime(int feverTime) {
-        this.feverTime = feverTime;
     }
 
     public Fever() {

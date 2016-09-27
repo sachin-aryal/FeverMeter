@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_NAME = "feverMeter";
 
     // fever table name
@@ -28,7 +28,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // fever Table Columns names
     private static final String KEY_TEMPERATURE = "temperature";
     private static final String KEY_FEVER_DATE = "feverDate";
-    private static final String KEY_FEVER_TIME = "feverTime";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,8 +38,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         String CREATE_FEVER_TABLE = "CREATE TABLE " + TABLE_FEVER + "("
-                + KEY_TEMPERATURE + " INTEGER," + KEY_FEVER_DATE + " INTEGER,"
-                + KEY_FEVER_TIME + " INTEGER"+ ")";
+                + KEY_TEMPERATURE + " INTEGER," + KEY_FEVER_DATE + " INTEGER" + ")";
         db.execSQL(CREATE_FEVER_TABLE);
 
     }
@@ -63,7 +61,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TEMPERATURE,fever.getTemperature());
         values.put(KEY_FEVER_DATE,fever.getFeverDate());
-        values.put(KEY_FEVER_TIME,fever.getFeverTime());
         db.insert(TABLE_FEVER,null,values);
 
     }
@@ -91,15 +88,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(fetchQuery,null);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-
-
         if (cursor.moveToFirst()) {
             do {
                 Fever fever = new Fever();
                 fever.setTemperature(Double.parseDouble(cursor.getString(0)));
                 fever.setFeverDate(Long.parseLong(cursor.getString(1)));
-                fever.setFeverTime(Integer.parseInt(cursor.getString(2)));
                 fevers.add(fever);
             } while (cursor.moveToNext());
         }
