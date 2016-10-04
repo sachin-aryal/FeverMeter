@@ -34,9 +34,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        LineChart home_fever_graph = (LineChart) findViewById(R.id.home_fever_graph);
-        home_fever_graph.setVisibility(View.GONE);
-
         new FeverListFiller(this).execute();
 
     }

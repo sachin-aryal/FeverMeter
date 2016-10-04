@@ -70,11 +70,11 @@ public class AddFeverActivity extends AppCompatActivity {
         int month = Integer.parseInt(monthSpinner.getSelectedItem().toString());
         int day = Integer.parseInt(daySpinner.getSelectedItem().toString());
         String timeText = timeSpinner.getSelectedItem().toString();
-        int time = HelperService.getActualTime(timeText);
+        String time = HelperService.getActualTime(timeText);
 
         System.out.println("Adding Time:"+time);
 
-        String feverDate = year + "/" + month + "/" + day + " " + time + ":00:00";
+        String feverDate = year + "/" + month + "/" + day + " " + time;
 
         Fever fever = new Fever(temperature, HelperService.getTimeInMillis(feverDate));
 

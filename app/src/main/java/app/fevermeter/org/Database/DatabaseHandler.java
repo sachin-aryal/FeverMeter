@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import app.fevermeter.org.Helper.HelperService;
 import app.fevermeter.org.Model.Fever;
 
 import java.text.ParseException;
@@ -23,11 +24,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "feverMeter";
 
     // fever table name
-    private static final String TABLE_FEVER = "fever";
+    public static final String TABLE_FEVER = "fever";
 
     // fever Table Columns names
-    private static final String KEY_TEMPERATURE = "temperature";
-    private static final String KEY_FEVER_DATE = "feverDate";
+    public static final String KEY_TEMPERATURE = "temperature";
+    public static final String KEY_FEVER_DATE = "feverDate";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -66,19 +67,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public List<Fever> getAllData(){
 
-        return null;
-    }
+    public List<Fever> getData(String startDate,String endDate){
 
-    public List<Fever> getData(String feverDate,int feverTime){
+        String query = HelperService.buildDbQuery(startDate,endDate)+" ORDER BY "+KEY_FEVER_DATE+" DESC";
 
-        return null;
-    }
+        List<Fever> fevers = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query,null);
 
-    public List<Fever> getData(String feverDate){
-
-        return null;
+        if (cursor.moveToFirst()) {
+            do {
+                Fever fever = new Fever();
+                fever.setTemperature(Double.parseDouble(cursor.getString(0)));
+                fever.setFeverDate(Long.parseLong(cursor.getString(1)));
+                fevers.add(fever);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return fevers;
     }
 
     public List<Fever> getLimitData(){

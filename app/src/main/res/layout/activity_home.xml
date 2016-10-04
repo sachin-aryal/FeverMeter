@@ -34,7 +34,7 @@
             android:layout_below="@+id/home_toggle_bar">
         <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="500pt">
+                android:layout_height="200pt">
 
             <ListView
                     android:layout_width="match_parent"
@@ -48,8 +48,7 @@
                     android:layout_width="150pt"
                     android:layout_height="150pt"
                     android:id="@+id/home_fever_graph"
-                    android:layout_below="@+id/home_fever_list"
-                    android:layout_marginTop="@dimen/form_margin_top"/>
+                    android:visibility="gone"/>
 
         </RelativeLayout>
     </ScrollView>

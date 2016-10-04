@@ -9,10 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.Spinner;
+import android.widget.*;
 import app.fevermeter.org.Adapter.FeverAdapter;
 import app.fevermeter.org.Database.DatabaseHandler;
 import app.fevermeter.org.Helper.HelperService;
@@ -68,11 +65,11 @@ public class FeverReportActivity extends AppCompatActivity {
     }
 
     public void toggleFilterBar(View view){
-        ScrollView scrollView = (ScrollView) findViewById(R.id.fever_report_scroll);
-        if(scrollView.getVisibility()==View.GONE){
-            scrollView.setVisibility(View.VISIBLE);
+        RelativeLayout relativeView = (RelativeLayout) findViewById(R.id.fever_report_scroll);
+        if(relativeView.getVisibility()==View.GONE){
+            relativeView.setVisibility(View.VISIBLE);
         }else{
-            scrollView.setVisibility(View.GONE);
+            relativeView.setVisibility(View.GONE);
         }
     }
 
@@ -88,6 +85,26 @@ public class FeverReportActivity extends AppCompatActivity {
         LineChart fever_report_graph = (LineChart) findViewById(R.id.fever_report_graph);
         fever_report_graph.setVisibility(View.VISIBLE);
         fever_report_list.setVisibility(View.GONE);
+    }
+
+    public void filterData(View view){
+        String startYear = ((Spinner) findViewById(R.id.startYear)).getSelectedItem().toString();
+        String endYear = ((Spinner) findViewById(R.id.endYear)).getSelectedItem().toString();
+
+        String startMonth = ((Spinner) findViewById(R.id.startMonth)).getSelectedItem().toString();
+        String endMonth = ((Spinner) findViewById(R.id.endMonth)).getSelectedItem().toString();
+
+        String startDay = ((Spinner) findViewById(R.id.startDay)).getSelectedItem().toString();
+        String endDay = ((Spinner) findViewById(R.id.endDay)).getSelectedItem().toString();
+
+        String startTime = ((Spinner) findViewById(R.id.startTime)).getSelectedItem().toString();
+        String endTime = ((Spinner) findViewById(R.id.endTime)).getSelectedItem().toString();
+
+        String startDate = startYear+"-"+startMonth+"-"+startDay+"-"+startTime;
+        String endDate = endYear+"-"+endMonth+"-"+endDay+"-"+endTime;
+
+        new FeverListFiller(this).execute("filter",startDate,endDate);
+
     }
 
 
@@ -106,6 +123,8 @@ public class FeverReportActivity extends AppCompatActivity {
 
             if(params[0].equalsIgnoreCase("limited")){
                 return databaseHandler.getLimitData();
+            }else if(params[0].equalsIgnoreCase("filter")){
+                return databaseHandler.getData(params[1],params[2]);
             }
             return null;
         }
@@ -165,41 +184,51 @@ public class FeverReportActivity extends AppCompatActivity {
 
                     //Setting Filter Parameters
 
-                    List<String> year_list = setYearSpinner();
-                    List<String> month_list = new ArrayList<>();
-                    month_list.add("Month");
-                    List<String> day_list = new ArrayList<>();
-                    day_list.add("Day");
-                    List<String> time_list = new ArrayList<>();
-                    time_list.add("Time");
-                    for(int i=1;i<=12;i++){month_list.add(i+"");time_list.add(i+" AM");}
-                    for(int i=1;i<=30;i++){day_list.add(i+"");}
-                    for(int i=1;i<=12;i++){time_list.add(i+" PM");}
 
-                    long startDateInMillis = fevers.get(fevers.size()-1).getFeverDate();
-                    long endDateInMillis = fevers.get(0).getFeverDate();
+                    if(fevers.size()>0) {
+                        List<String> year_list = setYearSpinner();
+                        List<String> month_list = new ArrayList<>();
+                        month_list.add("Month");
+                        List<String> day_list = new ArrayList<>();
+                        day_list.add("Day");
+                        List<String> time_list = new ArrayList<>();
+                        time_list.add("Time");
+                        for (int i = 1; i <= 12; i++) {
+                            month_list.add(i + "");
+                            time_list.add(i + " AM");
+                        }
+                        for (int i = 1; i <= 30; i++) {
+                            day_list.add(i + "");
+                        }
+                        for (int i = 1; i <= 12; i++) {
+                            time_list.add(i + " PM");
+                        }
 
-                    Spinner start_year = (Spinner) findViewById(R.id.startYear);
-                    Spinner end_year = (Spinner) findViewById(R.id.endYear);
-                    start_year.setSelection(year_list.indexOf(HelperService.getYearFromDate(startDateInMillis)+""));
-                    end_year.setSelection(year_list.indexOf(HelperService.getYearFromDate(endDateInMillis)+""));
+                        long startDateInMillis = fevers.get(fevers.size() - 1).getFeverDate();
+                        long endDateInMillis = fevers.get(0).getFeverDate();
+
+                        Spinner start_year = (Spinner) findViewById(R.id.startYear);
+                        Spinner end_year = (Spinner) findViewById(R.id.endYear);
+                        start_year.setSelection(year_list.indexOf(HelperService.getYearFromDate(startDateInMillis) + ""));
+                        end_year.setSelection(year_list.indexOf(HelperService.getYearFromDate(endDateInMillis) + ""));
 
 
-                    Spinner startMonth = (Spinner) findViewById(R.id.startMonth);
-                    Spinner endMonth = (Spinner) findViewById(R.id.endMonth);
-                    startMonth.setSelection(month_list.indexOf(HelperService.getMonthFromDate(startDateInMillis)+""));
-                    endMonth.setSelection(month_list.indexOf(HelperService.getMonthFromDate(endDateInMillis)+""));
+                        Spinner startMonth = (Spinner) findViewById(R.id.startMonth);
+                        Spinner endMonth = (Spinner) findViewById(R.id.endMonth);
+                        startMonth.setSelection(month_list.indexOf(HelperService.getMonthFromDate(startDateInMillis) + ""));
+                        endMonth.setSelection(month_list.indexOf(HelperService.getMonthFromDate(endDateInMillis) + ""));
 
+                        Spinner startDay = (Spinner) findViewById(R.id.startDay);
+                        Spinner endDay = (Spinner) findViewById(R.id.endDay);
+                        startDay.setSelection(day_list.indexOf(HelperService.getDayFromDate(startDateInMillis) + ""));
+                        endDay.setSelection(day_list.indexOf(HelperService.getDayFromDate(endDateInMillis) + ""));
 
-                    Spinner startDay = (Spinner) findViewById(R.id.startDay);
-                    Spinner endDay = (Spinner) findViewById(R.id.endDay);
-                    startDay.setSelection(day_list.indexOf(HelperService.getDayFromDate(startDateInMillis)+""));
-                    endDay.setSelection(day_list.indexOf(HelperService.getDayFromDate(endDateInMillis)+""));
+                        Spinner startTime = (Spinner) findViewById(R.id.startTime);
+                        Spinner endTime = (Spinner) findViewById(R.id.endTime);
+                        startTime.setSelection(time_list.indexOf(HelperService.getTimeFromDate(startDateInMillis) + ""));
+                        endTime.setSelection(time_list.indexOf(HelperService.getTimeFromDate(endDateInMillis) + ""));
 
-                    Spinner startTime = (Spinner) findViewById(R.id.startTime);
-                    Spinner endTime = (Spinner) findViewById(R.id.endTime);
-                    startTime.setSelection(time_list.indexOf(HelperService.getTimeFromDate(startDateInMillis)+""));
-                    endTime.setSelection(time_list.indexOf(HelperService.getTimeFromDate(endDateInMillis)+""));
+                    }
 
                 }
             });
@@ -214,7 +243,6 @@ public class FeverReportActivity extends AppCompatActivity {
             start_year.setAdapter(year_adapter);
             Spinner end_year = (Spinner) findViewById(R.id.endYear);
             end_year.setAdapter(year_adapter);
-            Collections.reverse(year_list);
             return year_list;
         }
 
